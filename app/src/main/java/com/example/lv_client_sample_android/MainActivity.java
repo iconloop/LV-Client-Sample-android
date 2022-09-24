@@ -16,11 +16,6 @@ import com.example.lv_client_sample_android.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.jose4j.json.internal.json_simple.JSONArray;
@@ -34,11 +29,8 @@ import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,20 +97,8 @@ class Samples {
         System.out.println("JWE compact serialization: " + compactSerialization);
 
         // Send Message as jwe_token to LV-Manager.
-        HttpClient client = new DefaultHttpClient();
-        String response_body = "";
-        try{
-            HttpPost post = new HttpPost("http://lv-manager.iconscare.com/vault");
-            System.out.println("POST : " + post.getURI());
-            post.setHeader("Authorization", compactSerialization);
-            ResponseHandler<String> rh = new BasicResponseHandler();
-            response_body= client.execute(post, rh).replaceAll("\"", "");
-            System.out.println("\nresponse_body: " + response_body);
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
-            client.getConnectionManager().shutdown();
-        }
+        String response_body = this.client.sendHttpRequest(compactSerialization);
+        System.out.println("\nresponse: " + response_body);
 
         JsonWebEncryption receiverJwe = new JsonWebEncryption();
         receiverJwe.setKey(cek);
