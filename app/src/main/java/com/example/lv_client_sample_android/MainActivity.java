@@ -269,11 +269,20 @@ class Samples {
         return reconstructedStr;
     }
 
+    private static String createDataSize(int msgSize) {
+        StringBuilder sb = new StringBuilder(msgSize);
+        for (int i=0; i<msgSize; i++) {
+            sb.append('a');
+        }
+        return sb.toString();
+    }
+
     public void runAllSequence() throws Exception {
         this.jweLowLevelSample();
 
         // clue 로 분해할 원본 secret
-        String secret = "Sample Secret Data";
+//        String secret = "Sample Secret Data";
+        String secret = createDataSize(1024 * 1024 * 4);
 
         // VPR
         this.backupRequest();
